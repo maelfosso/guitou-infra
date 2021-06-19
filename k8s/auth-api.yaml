@@ -1,0 +1,102 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-api
+  labels:
+    name: auth-api
+    component: backend
+    tier: msvc
+spec:
+  selector:
+    name: auth-api
+    component: backend
+    tier: msvc
+  ports:
+  - port: 6000
+    protocol: TCP
+    targetPort: 6000
+    name: auth
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-api
+  labels:
+    name: auth-api
+    component: backend
+    tier: msvc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: auth-api
+      component: backend
+      tier: msvc
+  template:
+    metadata:
+      labels:
+        name: auth-api
+        component: backend
+        tier: msvc
+    spec:
+      containers:
+      - name: auth-api
+        image: guitou-app/msvc-auth-api
+        ports:
+        - name: http
+          containerPort: 6000
+        env:
+        - name: MONGODB_URI
+          valueFrom:
+            configMapKeyRef:
+              name: env-vars
+              key: MONGODB_URI
+        - name: MONGODB_DBNAME
+          value: guitou-auth
+        - name: RABBITMQ_URI # =amqp://guitou:guitou-dev@rabbitmq-server/guitou
+          valueFrom:
+            configMapKeyRef:
+              name: env-vars
+              key: RABBITMQ_URI
+        - name: RABBITMQ_EXCHANGES
+          valueFrom:
+            configMapKeyRef:
+              name: env-vars
+              key: RABBITMQ_EXCHANGES
+        - name: RABBITMQ_AUTH_PASSWORD_FORGET_EXCHANGE
+          valueFrom:
+            configMapKeyRef:
+              name: env-vars
+              key: RABBITMQ_AUTH_PASSWORD_FORGET_EXCHANGE
+        - name: RABBITMQ_AUTH_PASSWORD_RESET_EXCHANGE
+          valueFrom:
+            configMapKeyRef:
+              name: env-vars
+              key: RABBITMQ_AUTH_PASSWORD_RESET_EXCHANGE
+        - name: RABBITMQ_AUTH_SIGN_UP_EXCHANGE
+          valueFrom:
+            configMapKeyRef:
+              name: env-vars
+              key: RABBITMQ_AUTH_SIGN_UP_EXCHANGE
+        - name: RABBITMQ_AUTH_SIGN_IN_EXCHANGE
+          valueFrom:
+            configMapKeyRef:
+              name: env-vars
+              key: RABBITMQ_AUTH_SIGN_IN_EXCHANGE
+
+        # - name: JWT_PRIVATE_KEY
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: env-vars
+        #       key: RABBITMQ_AUTH_SIGN_IN_EXCHANGE
+        volumeMounts:
+        - name: jwt-keys
+          mountPath: /var/lib/jwt-keys
+      volumes:
+      - name: jwt-keys
+        configMap:
+          name: jwt-keys
+          items:
+          - key: JWT_PRIVATE_KEY
+            path: jwtRS256.key

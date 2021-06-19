@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-vars
+  labels:
+    for: guitou
+data:
+  MONGODB_URI: mongodb://mongo-headless
+  RABBITMQ_URI: amqp://rabbitmq-headless
+  RABBITMQ_USER: guitou
+  RABBITMQ_PWD: guitou-dev
+  RABBITMQ_HOST: rabbitmq
+  RABBITMQ_PORT: "5672"
+  RABBITMQ_EXCHANGES: "auth:sign-in,auth:sign-up,auth:password:forget,auth:password:reset"
+  RABBITMQ_AUTH_PASSWORD_FORGET_EXCHANGE: auth:password:forget
+  RABBITMQ_AUTH_PASSWORD_RESET_EXCHANGE: auth:password:reset
+  RABBITMQ_AUTH_SIGN_UP_EXCHANGE: auth:sign-up
+  RABBITMQ_AUTH_SIGN_IN_EXCHANGE: auth:sign-in
