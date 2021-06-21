@@ -1,5 +1,38 @@
 ---
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: generator-pv
+  labels:
+    name: generator-api
+    tier: msvc
+    component: backend  
+spec:
+  storageClassName: manual
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /home/maelfosso/data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: generator-pvc
+  labels:
+    name: generator-api
+    tier: msvc
+    component: backend  
+spec:
+  storageClassName: manual
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: generator-api
@@ -43,6 +76,8 @@ spec:
       containers:
       - name: generator-api
         image: guitou-app/msvc-generator-api
+        # Must add readinessProbe because it can arrive that gRPC connection 
+        # To Project API is not effective
         ports:
         - name: http
           containerPort: 8000
@@ -75,3 +110,11 @@ spec:
             secretKeyRef:
               name: env-secrets
               key: GIT_REPO_URL
+        volumeMounts:
+        - mountPath: /app-generated
+          name: msvc-app-folder
+      volumes:
+      - name: msvc-app-folder
+        persistentVolumeClaim:
+          claimName: generator-pvc
+
