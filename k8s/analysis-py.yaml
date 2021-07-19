@@ -1,86 +1,86 @@
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: analysis-py
-  labels:
-    tier: msvc
-    name: analysis-py
-    component: backend
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      tier: msvc
-      name: analysis-py
-      component: backend
-  template:
-    metadata:
-      labels:
-        tier: msvc
-        name: analysis-py
-        component: backend
-    spec:
-      # initContainers:
-      # - name: check-rabbitmq
-      #   image: busybox
-      #   command:
-      #   - /bin/sh
-      #   - -c
-      #   - while [[ `nc -zv ${RABBITMQ_HOST} ${RABBITMQ_PORT}` -ne 0 ]]; do sleep 10; done;
-      #   env:
-      #   - name: RABBITMQ_HOST
-      #     valueFrom:
-      #       configMapKeyRef:
-      #         name: env-vars
-      #         key: RABBITMQ_HOST
-      #   - name: RABBITMQ_PORT
-      #     valueFrom:
-      #       configMapKeyRef:
-      #         name: env-vars
-      #         key: RABBITMQ_PORT
-      containers:
-      - name: analysis-py
-        image: guitou-app/msvc-analysis-py
-        env:
-        - name: ENV
-          value: dev
-        - name: MONGODB_DBNAME
-          value: guitou-analysis
-        - name: MONGODB_URI # =mongodb://db/guitou-data-analysis
-          valueFrom:
-            configMapKeyRef:
-              name: env-vars
-              key: MONGODB_URI
-        - name: RABBITMQ_URI # =amqp://guitou:guitou-dev@rabbitmq-server/guitou
-          valueFrom:
-            configMapKeyRef:
-              name: env-vars
-              key: RABBITMQ_URI
-        # - name: RABBITMQ_HOST # =rabbitmq
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: env-vars
-        #       key: RABBITMQ_HOST
-        # - name: RABBITMQ_PORT # =5672
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: env-vars
-        #       key: RABBITMQ_PORT
-        # - name: RABBITMQ_USER # =guitou
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: env-vars
-        #       key: RABBITMQ_USER
-        # - name: RABBITMQ_PWD # =guitou-dev
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: env-vars
-        #       key: RABBITMQ_PWD
-        # - name: RABBITMQ_VHOST # =guitou
-        #   valueFrom:
-        #     configMapKeyRef:
-        #       name: env-vars
-        #       key: RABBITMQ_VHOST
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: analysis-py
+#   labels:
+#     tier: msvc
+#     name: analysis-py
+#     component: backend
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       tier: msvc
+#       name: analysis-py
+#       component: backend
+#   template:
+#     metadata:
+#       labels:
+#         tier: msvc
+#         name: analysis-py
+#         component: backend
+#     spec:
+#       # initContainers:
+#       # - name: check-rabbitmq
+#       #   image: busybox
+#       #   command:
+#       #   - /bin/sh
+#       #   - -c
+#       #   - while [[ `nc -zv ${RABBITMQ_HOST} ${RABBITMQ_PORT}` -ne 0 ]]; do sleep 10; done;
+#       #   env:
+#       #   - name: RABBITMQ_HOST
+#       #     valueFrom:
+#       #       configMapKeyRef:
+#       #         name: env-vars
+#       #         key: RABBITMQ_HOST
+#       #   - name: RABBITMQ_PORT
+#       #     valueFrom:
+#       #       configMapKeyRef:
+#       #         name: env-vars
+#       #         key: RABBITMQ_PORT
+#       containers:
+#       - name: analysis-py
+#         image: guitou-app/msvc-analysis-py
+#         env:
+#         - name: ENV
+#           value: dev
+#         - name: MONGODB_DBNAME
+#           value: guitou-analysis
+#         - name: MONGODB_URI # =mongodb://db/guitou-data-analysis
+#           valueFrom:
+#             configMapKeyRef:
+#               name: env-vars
+#               key: MONGODB_URI
+#         - name: RABBITMQ_URI # =amqp://guitou:guitou-dev@rabbitmq-server/guitou
+#           valueFrom:
+#             configMapKeyRef:
+#               name: env-vars
+#               key: RABBITMQ_URI
+#         # - name: RABBITMQ_HOST # =rabbitmq
+#         #   valueFrom:
+#         #     configMapKeyRef:
+#         #       name: env-vars
+#         #       key: RABBITMQ_HOST
+#         # - name: RABBITMQ_PORT # =5672
+#         #   valueFrom:
+#         #     configMapKeyRef:
+#         #       name: env-vars
+#         #       key: RABBITMQ_PORT
+#         # - name: RABBITMQ_USER # =guitou
+#         #   valueFrom:
+#         #     configMapKeyRef:
+#         #       name: env-vars
+#         #       key: RABBITMQ_USER
+#         # - name: RABBITMQ_PWD # =guitou-dev
+#         #   valueFrom:
+#         #     configMapKeyRef:
+#         #       name: env-vars
+#         #       key: RABBITMQ_PWD
+#         # - name: RABBITMQ_VHOST # =guitou
+#         #   valueFrom:
+#         #     configMapKeyRef:
+#         #       name: env-vars
+#         #       key: RABBITMQ_VHOST
         
   

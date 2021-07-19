@@ -14,7 +14,7 @@ spec:
   capacity:
     storage: 1Gi
   hostPath:
-    path: /home/maelfosso/data
+    path: /minikube-host/data
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -83,6 +83,11 @@ spec:
           containerPort: 8000
           protocol: TCP
         env:
+        - name: PROJECT_GRPC_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: env-vars
+              key: PROJECT_GRPC_SERVER
         - name: MONGODB_URI
           valueFrom:
             configMapKeyRef:

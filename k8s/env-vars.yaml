@@ -16,3 +16,5 @@ data:
   RABBITMQ_AUTH_PASSWORD_RESET_EXCHANGE: auth:password:reset
   RABBITMQ_AUTH_SIGN_UP_EXCHANGE: auth:sign-up
   RABBITMQ_AUTH_SIGN_IN_EXCHANGE: auth:sign-in
+  PROJECT_GRPC_SERVER: projects-api:50051
+  
