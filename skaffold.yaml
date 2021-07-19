@@ -1,0 +1,51 @@
+apiVersion: skaffold/v2beta13
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+    - ./infra/k8s/*
+build:
+  local:
+    push: false
+  artifacts:
+  - image: guitou-app/msvc-projects-api
+    context: msvc/msvc-projects-api
+    docker:
+      dockerfile: Dockerfile
+    sync:
+      manual:
+      - src: 'src/**/*.ts'
+        dest: .
+  - image: guitou-app/msvc-auth-api
+    context: msvc/msvc-auth-api
+    docker:
+      dockerfile: Dockerfile
+    sync:
+      manual:
+      - src: '**/*.go'
+        dest: .
+  # - image: guitou-app/msvc-analysis-py
+  #   context: msvc/msvc-analysis-py
+  #   docker:
+  #     dockerfile: Dockerfile
+  #   sync:
+  #     manual:
+  #     - src: '**/*.py'
+  #       dest: .
+  # - image: guitou-app/msvc-analysis-api
+  #   context: msvc/msvc-analysis-api
+  #   docker:
+  #     dockerfile: Dockerfile
+  #   sync:
+  #     manual:
+  #     - src: '**/*.go'
+  #       dest: .
+  - image: guitou-app/msvc-generator-api
+    context: msvc/msvc-generate-api
+    docker:
+      dockerfile: Dockerfile
+    sync:
+      manual:
+      - src: '**/*.go'
+        dest: .
+  
